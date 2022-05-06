@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Cancer Predictor</title>
+    <link rel="icon" href="static/icon.png">
+
+    <!-- Bootstrap and Bootswatch CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/cosmo/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://unpkg.com/d3-v6-tip@1.0.6/build/d3-v6-tip.js"></script>
+    <script src="https://unpkg.com/jeezy@1.13.1/lib/jeezy.min.js"></script>
+    <script type="text/javascript" src="/static/js/logic.js"></script>
+
+    <!-- JS -->
+    <script type="text/javascript" src="https://public.tableau.com/javascripts/api/tableau-2.js"></script>
+
+</head>
+
+<body>
+
+    <!--Navbar-->
+    <nav  class="navbar navbar-expand-lg navbar-dark bg-success">
+        <a class="navbar-brand" href="/">
+            <img src="static/icon.png" alt="logo" style="width:40px;height:40px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+         <div class="nav nav-tabs nav-dark" id="nav-tab" role="tablist">
+
+
+                    <a class="nav-item nav-link navbar-dark bg-success"  style=" color: #fff;" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Home</a>
+
+
+                    <a class="nav-item nav-link active bg-success " style=" color: #fff;" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Predictor</a>
+
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+
+    <div class="row text-center" style="margin-top:3%">
+        <div class = "col-md-12">
+            <h3 class="display-4"><strong>Prédiction du risque d'atteinte par le cancer</strong></h3>
+        </div>
+    </div>
+
+    <div class= "container-fluid">
+        <div class="row text-center" style="margin-top:2%">
+            <div class = "col-md-12">
+                <h4>
+             Utilisez les filtres ci-dessous pour prédire si vous aurez ou non un cancer
+                </h4>
+            </div>
+        </div>
+        <div class="row mt-4" >
+            <div class = "col-md-4">
+                <!--FILTERS-->
+                <div class="card text-white bg-success mb-3">
+                    <h4 class="card-header">Filtres de prédiction du cancer</h4>
+                    <form action="/makePredictions" method="post">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="genre">Genre</label>
+                                    <select name="genre" id="genre">
+                                        <option value="1">Homme</option>
+                                        <option value="0">Femme</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                             <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="age">Age</label>
+                                    <input id="age" type="number" step="1" name="age" placeholder="Entrez l'Age " required>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="smoke">Est-ce que tu fumes?</label>
+                                    <select id="smoke" name="smoke">
+                                        <option value="2">Oui</option>
+                                        <option value="1">Non</option>
+
+                                    </select>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="alchool">Est ce que tu bois de l'alcool?</label>
+                                    <select id="alchool" name="alchool">
+                                          <option value="2">Oui</option>
+                                        <option value="1">Non</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="peer">Avez-vous la pression des pairs?</label>
+                                    <select id="peer" name="peer">
+                                        <option value="2">Oui</option>
+                                        <option value="1">Non</option>
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label class="col-form-label" for="chronic">Vous souffrez d'une maladie chronique?</label>
+                                    <select id="chronic" name="chronic">
+                                        <option value="2">Oui</option>
+                                        <option value="1">Non</option>
+                                    </select>
+
+                                </div>
+                                <label class="col-form-label" for="what">Qu'est-ce que c'est?</label>
+                                <input type="text" name="" id="what" placeholder="Décrire la maladie chronique">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 mt-5 text-center">
+                                <button type="submit" class="btn btn-warning " id="">Faire des prédictions!</button>
+                            </div>
+
+                        </div>
+                    </div>
+                        </form>
+                </div>
+            </div>
+
+            <!--FEATURE IMPORTANCES-->
+            <div class = "col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Facteurs liés</h4>
+                        <h6 class="card-subtitle mb-2">Model 1</h6>
+                        <img src="static/images/feature_importances1.png" alt="logo" style="height:225px">
+                        <br>
+                        <h6 class="card-subtitle mb-2">Model 2</h6>
+                        <img src="static/images/feature_importances2.png" alt="logo" style="height:225px">
+                        <p class="text-center mt-3">Nous avons choisit les facteurs qui ont dépasser une valeur de 0.2 (le milieu) au dessous du milieu les facteurs n’ont plus une relation avec le phénoméne étudié</p>
+                    </div>
+                </div>
+            </div>
+            <div class = "col-md-4">
+                <!--GLOSSARY-->
+                <div class="card">
+                    <div class="card-body">
+                    <h4 class="card-title">A propos le cancer</h4>
+                    <p class="card-text">Pour consulter les ressources. Click <a href="https://drive.google.com/file/d/1aWHDzqX8WImyqgu2_ypVhwaiKzcakqvp/view?usp=sharing">here</a></p>
+                    <h6 class="card-subtitle mb-2 text-muted">Cancer</h6>
+                    <p class="card-text">Le cancer de poumons, l’un des types de cancer le plus répandues au monde, est de plus en plus en propagation.</p>
+                    <h6 class="card-subtitle mb-2 text-muted">Les lacunes du domaine</h6>
+                    <p class="card-text">Les causes directes de cancer ne sont pas encore connues jusqu'a présent .Les études ont montré les facteurs à risques ,mais n'ont pas bien mis en
+évidence une corrélation ou un potentiel risque augmenté suite à la combination de ces facteurs</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr style="color:lightgray; border-width: 3px;">
+
+
+  </div>
+
+  <div class="tab-pane fade " id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+      <center>
+      <div class="col-xs-10 col-sm-8 col-md-8 p-2">
+    <div class="card card-style mb-2">
+        <div class="card-body">
+            <div class="chart-container" style="position: relative;">
+                <canvas id="income_vs_expense"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+     <div class="col-xs-10 col-sm-8 col-md-8 p-2" >
+    <div class="card card-style mb-2">
+        <div class="card-body">
+            <div class="chart-container" style="position: relative;">
+                <canvas id="ff"></canvas>
+            </div>
+        </div>
+    </div>
+</div></center>
+  </div>
+
+</div>
+{% block javascript %}
+<script>
+
+     let income_vs_category_chart = new Chart(ff, {
+            type: 'bar',
+            data: {
+                labels: ['SMOKING','ALCOHOL CONSUMING','AGE','GENDER','CHRONIC DISEASE','PEER_PRESSURE'],
+                datasets: [{
+                    labels:  ['SMOKING','ALCOHOL CONSUMING','AGE','GENDER','CHRONIC DISEASE','PEER_PRESSURE'],
+
+                    data: [0.17 ,0.22,0.3401,0.15,0.1012,0.059,0 ],
+            backgroundColor: [
+          'rgba(255, 26, 104, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(0, 0, 0, 0.2)'
+        ], borderColor: [
+          'rgba(255, 26, 104, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(0, 0, 0, 1)'
+        ],
+            borderWidth: 1,
+            hoverBorderColor: "black",
+            hoverBorderWidth: 2,
+            hoverBackgroundColor: 'rgba(12,16,222,0.2)',
+            pointHoverRadius: 5
+        }],
+            },
+        options: {
+                title: {
+                    display: true,
+                        text: "Les Facteurs le plus liée au cancer",
+                            fontSize: 20,
+            },
+                legend: {
+                    position: "right",
+                        labels: {
+                        fontColor: "gray"
+                    },
+                    display: false,
+            },
+
+                elements: {
+                    hitRadius: 3,
+
+            },
+              scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+            }
+        })
+  let income_vs_expense_chart = new Chart(income_vs_expense, {
+            type: 'pie',
+            data: {
+            labels: ['Positive Patients', 'Negative Patients'],
+                datasets: [{
+                    label: "Le nombre des Patients du notre data utilisée ",
+                    data: [270 ,39 ],
+                    backgroundColor: ['#5DA5DA', '#ea2d08'],
+
+                    borderWidth: 1,
+                    hoverBorderColor: "black",
+                    hoverBorderWidth: 2,
+                    hoverBackgroundColor: 'rgba(154, 245, 140)',
+                    pointHoverRadius: 5
+                }],
+            },
+            options: {
+                    title: {
+                        display: true,
+                            text: "Le nombre des Patients du notre data utilisée",
+                                fontSize: 20,
+                    },
+                    legend: {
+                        position: "right",
+                            labels: {
+                            fontColor: "gray"
+                        },
+                        display: true,
+                    },
+
+                    elements: {
+                        hitRadius: 3,
+                    }
+            }
+        })
+</script>
+{% endblock%}
+</body>
+
+</html>
